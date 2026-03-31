@@ -1,0 +1,3 @@
+env: "local"
+http_address: ":8080"
+storage_path: "./data/packify.db"
