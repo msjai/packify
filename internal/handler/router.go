@@ -16,9 +16,11 @@ func BuildRoutes(router *chi.Mux,
 	packGetHandler := NewGetHandler(getService)
 	packSubmitHandler := NewSubmitHandler(submitService)
 
-	router.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
+	pingHandler := func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("pong\n"))
-	})
+	}
+	router.Get("/ping", pingHandler)
+	router.Head("/ping", pingHandler)
 
 	// Group allows applying middleware to these routes in the future.
 	router.Group(func(router chi.Router) {

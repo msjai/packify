@@ -2,7 +2,6 @@ package app
 
 import (
 	"log/slog"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -39,10 +38,6 @@ func Run() {
 	router.Use(middleware.Recoverer)
 
 	handler.BuildRoutes(router, calculateService, getService, submitService)
-
-	router.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("pong\n"))
-	})
 
 	srv := httpserver.New(cfg.HTTPAddress, router)
 	srv.Start()
