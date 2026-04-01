@@ -1,6 +1,8 @@
 package handler
 
-import "net/http"
+import (
+	"net/http"
+)
 
 // Getter defines the interface for retrieving pack sizes.
 type Getter interface {

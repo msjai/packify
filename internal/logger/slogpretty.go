@@ -21,6 +21,7 @@ type PrettyHandler struct {
 	attrs []slog.Attr
 }
 
+// NewPrettyHandler creates a new PrettyHandler with the given options and output writer.
 func (opts PrettyHandlerOptions) NewPrettyHandler(
 	out io.Writer,
 ) *PrettyHandler {
@@ -32,6 +33,8 @@ func (opts PrettyHandlerOptions) NewPrettyHandler(
 	return h
 }
 
+// Handle processes a log record, formats it with colors and structured fields,
+// and outputs it to the logger.
 func (h *PrettyHandler) Handle(_ context.Context, r slog.Record) error {
 	level := r.Level.String() + ":"
 
@@ -81,6 +84,7 @@ func (h *PrettyHandler) Handle(_ context.Context, r slog.Record) error {
 	return nil
 }
 
+// WithAttrs returns a new PrettyHandler with the given attributes added to the existing ones.
 func (h *PrettyHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
 	return &PrettyHandler{
 		Handler: h.Handler,
@@ -89,6 +93,7 @@ func (h *PrettyHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
 	}
 }
 
+// WithGroup returns a new PrettyHandler with the given group name added to the existing handler.
 func (h *PrettyHandler) WithGroup(name string) slog.Handler {
 	// TODO: implement
 	return &PrettyHandler{
