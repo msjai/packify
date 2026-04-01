@@ -1,4 +1,4 @@
-module packify
+module github.com/msjai/packify
 
 go 1.26.1
 

@@ -10,12 +10,12 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
-	"packify/internal/config"
-	"packify/internal/handler"
-	"packify/internal/httpserver"
-	"packify/internal/logger"
-	"packify/internal/service"
-	"packify/internal/storage/sqlite"
+	"github.com/msjai/packify/internal/config"
+	"github.com/msjai/packify/internal/handler"
+	"github.com/msjai/packify/internal/httpserver"
+	"github.com/msjai/packify/internal/logger"
+	"github.com/msjai/packify/internal/service"
+	"github.com/msjai/packify/internal/storage/sqlite"
 )
 
 func Run() {

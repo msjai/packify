@@ -1,6 +1,6 @@
 package main
 
-import "packify/internal/app"
+import "github.com/msjai/packify/internal/app"
 
 func main() {
 	app.Run()
