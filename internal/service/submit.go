@@ -19,3 +19,8 @@ func NewSubmitService(packSubmitter PackSubmitter) *SubmitService {
 		packSubmitter: packSubmitter,
 	}
 }
+
+// UpdatePackSizes replaces all pack sizes in storage.
+func (s *SubmitService) UpdatePackSizes(sizes []int) error {
+	return s.packSubmitter.UpdatePackSizes(sizes)
+}
