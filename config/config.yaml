@@ -1,3 +1,10 @@
 env: "local"
 http_address: ":8080"
 storage_path: "./data/packify.db"
+default_packs:
+  - 250
+  - 500
+  - 1000
+  - 2000
+  - 5000
+

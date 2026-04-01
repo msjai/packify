@@ -24,10 +24,11 @@ func Run() {
 	logger.New(cfg.Env)
 	slog.Info("starting packify server", slog.String("env", cfg.Env))
 
-	storage, err := sqlite.New(cfg.StoragePath)
+	storage, err := sqlite.New(cfg.StoragePath, cfg.DefaultPacks)
 	if err != nil {
 		panic(err)
 	}
+	defer storage.Close()
 
 	calculateService := service.NewCalculateService(storage)
 	getService := service.NewGetService(storage)

@@ -8,9 +8,10 @@ import (
 )
 
 type Config struct {
-	Env         string `yaml:"env" env-default:"local"`
-	HTTPAddress string `yaml:"http_address" env-default:":8080"`
-	StoragePath string `yaml:"storage_path" env-required:"true"`
+	Env          string `yaml:"env" env-default:"local"`
+	HTTPAddress  string `yaml:"http_address" env-default:":8080"`
+	StoragePath  string `yaml:"storage_path" env-required:"true"`
+	DefaultPacks []int  `yaml:"default_packs" env-required:"true"`
 }
 
 // MustLoad loads the config. "Must" = panics on error.
