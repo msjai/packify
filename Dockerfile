@@ -12,6 +12,7 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/bin/packify .
 COPY --from=builder /app/config ./config
+RUN mkdir -p /app/data
 
 EXPOSE 8080
 
