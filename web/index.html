@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,9 +8,16 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"
     >
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
     <title>Packify — Order Packs Calculator</title>
   </head>
   <body>
+  <header>
+    <nav>
+      <strong>Packify</strong>
+      <button type="button" id="theme-toggle" class="outline" style="width: auto; padding: 0.5rem 0.75rem;">🌙</button>
+    </nav>
+  </header>
     <main>
       <h1>Order Packs Calculator</h1>
 
@@ -45,6 +52,9 @@
         </table>
       </section>
     </main>
+  <footer>
+    <small style="display: block; text-align: center;">Powered by <strong>Packify</strong> v1.0.0</small>
+  </footer>
 
     <script src="app.js"></script>
   </body>
