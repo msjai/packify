@@ -13,4 +13,6 @@ WORKDIR /app
 COPY --from=builder /app/bin/packify .
 COPY --from=builder /app/config ./config
 
+EXPOSE 8080
+
 CMD ["./packify", "--config=./config/config.yaml"]
