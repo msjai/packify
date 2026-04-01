@@ -19,3 +19,8 @@ func NewGetService(packStore PackStore) *GetService {
 		packStore: packStore,
 	}
 }
+
+// GetPackSizes returns available pack sizes from storage.
+func (s *GetService) GetPackSizes() ([]int, error) {
+	return s.packStore.GetPackSizes()
+}
