@@ -1,9 +1,8 @@
 package handler
 
 import (
-	"encoding/json"
 	"errors"
-	"log/slog"
+	"fmt"
 	"net/http"
 )
 
@@ -54,21 +53,12 @@ func NewSubmitHandler(packSubmitter Submitter) *SubmitHandler {
 // Handle processes a request to update pack sizes.
 func (h *SubmitHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	var req UpdatePacksRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		slog.Error("failed to decode request", "handler", h.name, "error", err)
-		http.Error(w, "invalid request body", http.StatusBadRequest)
-		return
-	}
-
-	if err := req.Validate(); err != nil {
-		slog.Error("validation failed", "handler", h.name, "error", err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	if err := parseRequest(w, r, &req, h.name); err != nil {
 		return
 	}
 
 	if err := h.submitter.UpdatePackSizes(req.Packs); err != nil {
-		slog.Error("failed to update pack sizes", "handler", h.name, "error", err)
-		http.Error(w, "failed to update pack sizes", http.StatusInternalServerError)
+		writeErrorResponse(w, h.name, fmt.Errorf("failed to update pack sizes: %w", err), http.StatusInternalServerError)
 		return
 	}
 

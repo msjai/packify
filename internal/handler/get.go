@@ -1,8 +1,7 @@
 package handler
 
 import (
-	"encoding/json"
-	"log/slog"
+	"fmt"
 	"net/http"
 )
 
@@ -34,19 +33,9 @@ func NewGetHandler(packGetter Getter) *GetHandler {
 func (h *GetHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	sizes, err := h.getter.GetPackSizes()
 	if err != nil {
-		slog.Error("failed to get pack sizes", "handler", h.name, "error", err)
-		http.Error(w, "failed to get pack sizes", http.StatusInternalServerError)
+		writeErrorResponse(w, h.name, fmt.Errorf("failed to get pack sizes: %w", err), http.StatusInternalServerError)
 		return
 	}
 
-	raw, err := json.Marshal(PacksResponse{Packs: sizes})
-	if err != nil {
-		slog.Error("failed to marshal pack sizes", "handler", h.name, "error", err)
-		http.Error(w, "failed to marshal response", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(raw)
+	writeSuccessResponse(w, PacksResponse{Packs: sizes})
 }
