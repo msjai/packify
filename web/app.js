@@ -75,7 +75,39 @@ addPackBtn.addEventListener("click", () => createPackRow(""));
 
 // Submit updated pack sizes.
 submitPacksBtn.addEventListener("click", async () => {
-  // TODO: implement when PUT /api/packs is ready.
+  const inputs = packSizesList.querySelectorAll("input[type=number]");
+  const packs = [];
+
+  for (const input of inputs) {
+    const val = parseInt(input.value, 10);
+    if (!isNaN(val) && val > 0) {
+      packs.push(val);
+    }
+  }
+
+  if (packs.length === 0) {
+    alert("At least one pack size is required. Changes were not saved.");
+    await loadPackSizes();
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/packs", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ packs }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      alert("Error: " + text);
+      return;
+    }
+
+    await loadPackSizes();
+  } catch (err) {
+    alert("Failed to update pack sizes: " + err.message);
+  }
 });
 
 // Calculate packs for order.
