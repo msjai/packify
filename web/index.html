@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"
+    >
+    <title>Packify — Order Packs Calculator</title>
+  </head>
+  <body>
+    <main>
+      <h1>Order Packs Calculator</h1>
+
+      <section>
+        <h2>Pack Sizes</h2>
+        <div id="pack-sizes-list"></div>
+        <button type="button" id="add-pack-btn" class="secondary outline">+ Add pack size</button>
+        <br>
+        <button type="button" id="submit-packs-btn">Submit pack sizes change</button>
+      </section>
+
+      <hr>
+
+      <section>
+        <h2>Calculate packs for order</h2>
+        <form id="calculate-form">
+          <label for="order-items">
+            Items:
+            <input type="number" id="order-items" name="items" min="1" placeholder="Enter order quantity" required>
+          </label>
+          <button type="submit">Calculate</button>
+        </form>
+
+        <table id="results-table" style="display: none;">
+          <thead>
+            <tr>
+              <th>Pack</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody id="results-body"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

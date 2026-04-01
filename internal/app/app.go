@@ -2,6 +2,7 @@ package app
 
 import (
 	"log/slog"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -15,6 +16,7 @@ import (
 	"github.com/msjai/packify/internal/logger"
 	"github.com/msjai/packify/internal/service"
 	"github.com/msjai/packify/internal/storage/sqlite"
+	"github.com/msjai/packify/web"
 )
 
 func Run() {
@@ -38,6 +40,9 @@ func Run() {
 	router.Use(middleware.Recoverer)
 
 	handler.BuildRoutes(router, calculateService, getService, submitService)
+
+	// Serve embedded static files (index.html, app.js, etc.).
+	router.Handle("/*", http.FileServerFS(web.FS))
 
 	srv := httpserver.New(cfg.HTTPAddress, router)
 	srv.Start()
