@@ -12,6 +12,7 @@ type Config struct {
 	HTTPAddress  string `yaml:"http_address" env-default:":8080"`
 	StoragePath  string `yaml:"storage_path" env-required:"true"`
 	DefaultPacks []int  `yaml:"default_packs" env-required:"true"`
+	MaxOrder     int    `yaml:"max_order" env-default:"1000000"`
 }
 
 // MustLoad loads the config. "Must" = panics on error.
@@ -41,6 +42,10 @@ func MustLoadPath(configPath string) *Config {
 	// It also validates env-required and applies env-default values.
 	if err := cleanenv.ReadConfig(configPath, &cfg); err != nil {
 		panic("cannot read config: " + err.Error())
+	}
+
+	if cfg.MaxOrder <= 0 {
+		panic("max_order must be positive")
 	}
 
 	return &cfg

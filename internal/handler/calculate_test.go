@@ -56,6 +56,13 @@ func TestCalculateHandler_Handle(t *testing.T) {
 			wantBody: "order must be positive\n",
 		},
 		{
+			name:     "order exceeds max limit",
+			body:     `{"order":2000000}`,
+			mock:     &mockCalculator{},
+			wantCode: http.StatusBadRequest,
+			wantBody: "order must not exceed 1000000\n",
+		},
+		{
 			name:     "service error",
 			body:     `{"order":100}`,
 			mock:     &mockCalculator{err: errors.New("no pack sizes configured")},
@@ -69,7 +76,7 @@ func TestCalculateHandler_Handle(t *testing.T) {
 			req := httptest.NewRequest(http.MethodPost, "/api/calculate", strings.NewReader(tc.body))
 			w := httptest.NewRecorder()
 
-			h := NewCalculateHandler(tc.mock)
+			h := NewCalculateHandler(tc.mock, 1_000_000)
 			h.Handle(w, req)
 
 			assert.Equal(t, tc.wantCode, w.Code)

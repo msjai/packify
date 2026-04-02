@@ -17,14 +17,6 @@ type CalculateRequest struct {
 	Order int `json:"order"`
 }
 
-// Validate checks that order quantity is positive.
-func (r CalculateRequest) Validate() error {
-	if r.Order <= 0 {
-		return errors.New("order must be positive")
-	}
-	return nil
-}
-
 // PackEntry represents a single pack size and its quantity in the result.
 type PackEntry struct {
 	Pack     int `json:"pack"`
@@ -40,13 +32,15 @@ type CalculateResponse struct {
 type CalculateHandler struct {
 	name       string
 	calculator Calculator
+	maxOrder   int
 }
 
 // NewCalculateHandler creates a new CalculateHandler with the given calculator service.
-func NewCalculateHandler(packCalculator Calculator) *CalculateHandler {
+func NewCalculateHandler(packCalculator Calculator, maxOrder int) *CalculateHandler {
 	return &CalculateHandler{
 		name:       "pack calculate handler",
 		calculator: packCalculator,
+		maxOrder:   maxOrder,
 	}
 }
 
@@ -54,6 +48,11 @@ func NewCalculateHandler(packCalculator Calculator) *CalculateHandler {
 func (h *CalculateHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	var req CalculateRequest
 	if err := parseRequest(w, r, &req, h.name); err != nil {
+		return
+	}
+
+	if req.Order > h.maxOrder {
+		writeErrorResponse(w, h.name, fmt.Errorf("order must not exceed %d", h.maxOrder), http.StatusBadRequest)
 		return
 	}
 
@@ -71,6 +70,14 @@ func (h *CalculateHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	sort.Slice(packs, func(i, j int) bool {
 		return packs[i].Pack < packs[j].Pack
 	})
-	
+
 	writeSuccessResponse(w, CalculateResponse{Packs: packs})
+}
+
+// Validate checks that order quantity is positive.
+func (r CalculateRequest) Validate() error {
+	if r.Order <= 0 {
+		return errors.New("order must be positive")
+	}
+	return nil
 }

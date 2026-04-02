@@ -11,8 +11,9 @@ func BuildRoutes(router *chi.Mux,
 	calculateService Calculator,
 	getService Getter,
 	submitService Submitter,
+	maxOrder int,
 ) {
-	packCalculateHandler := NewCalculateHandler(calculateService)
+	packCalculateHandler := NewCalculateHandler(calculateService, maxOrder)
 	packGetHandler := NewGetHandler(getService)
 	packSubmitHandler := NewSubmitHandler(submitService)
 

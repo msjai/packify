@@ -39,7 +39,7 @@ func Run() {
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
 
-	handler.BuildRoutes(router, calculateService, getService, submitService)
+	handler.BuildRoutes(router, calculateService, getService, submitService, cfg.MaxOrder)
 
 	// Serve embedded static files (index.html, app.js, etc.).
 	router.Handle("/*", http.FileServerFS(web.FS))
