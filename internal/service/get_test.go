@@ -17,7 +17,7 @@ func TestGetService_GetPackSizes(t *testing.T) {
 	})
 
 	t.Run("storage error is propagated", func(t *testing.T) {
-		svc := NewGetService(&mockPackStore{err: errors.New("db locked")})
+		svc := NewGetService(&mockPackStore{getErr: errors.New("db locked")})
 		_, err := svc.GetPackSizes()
 		assert.ErrorContains(t, err, "db locked")
 	})

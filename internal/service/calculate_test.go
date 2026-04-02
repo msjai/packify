@@ -127,7 +127,7 @@ func TestCalculateService_Calculate(t *testing.T) {
 	})
 
 	t.Run("storage error is propagated", func(t *testing.T) {
-		svc := NewCalculateService(&mockPackStore{err: errors.New("db connection lost")})
+		svc := NewCalculateService(&mockPackStore{getErr: errors.New("db connection lost")})
 		_, err := svc.Calculate(100)
 		assert.ErrorContains(t, err, "db connection lost")
 	})

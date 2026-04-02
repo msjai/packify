@@ -18,7 +18,7 @@ func TestSubmitService_UpdatePackSizes(t *testing.T) {
 	})
 
 	t.Run("storage error is propagated", func(t *testing.T) {
-		svc := NewSubmitService(&mockPackStore{err: errors.New("disk full")})
+		svc := NewSubmitService(&mockPackStore{updateErr: errors.New("disk full")})
 		err := svc.UpdatePackSizes([]int{100})
 		assert.ErrorContains(t, err, "disk full")
 	})

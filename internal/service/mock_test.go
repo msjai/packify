@@ -2,17 +2,18 @@ package service
 
 // mockPackStore implements PackStore and PackSubmitter for testing.
 type mockPackStore struct {
-	sizes []int
-	err   error
+	sizes     []int
+	getErr    error
+	updateErr error
 }
 
 func (m *mockPackStore) GetPackSizes() ([]int, error) {
-	return m.sizes, m.err
+	return m.sizes, m.getErr
 }
 
 func (m *mockPackStore) UpdatePackSizes(sizes []int) error {
-	if m.err != nil {
-		return m.err
+	if m.updateErr != nil {
+		return m.updateErr
 	}
 	m.sizes = sizes
 	return nil
