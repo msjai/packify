@@ -2,6 +2,13 @@
 
 Order packs calculator for optimal shipment.
 
+## Tech Stack
+
+- **Backend:** Go 1.26, chi router, slog logger
+- **Database:** SQLite (mattn/go-sqlite3)
+- **Frontend:** Vanilla JS, Pico CSS (classless)
+- **Infrastructure:** Docker, multi-stage build, Render
+
 ## Quick Start
 
 ### Run in Docker
@@ -18,6 +25,44 @@ make local-run
 
 The application will be available at `http://localhost:8080`.
 
+## API Endpoints
+
+### GET /api/packs
+
+Returns current pack sizes.
+
+```bash
+curl localhost:8080/api/packs
+```
+
+```json
+{"packs": [250, 500, 1000, 2000, 5000]}
+```
+
+### PUT /api/packs
+
+Updates pack sizes. Validates: non-empty list, all values > 0, no duplicates.
+
+```bash
+curl -X PUT localhost:8080/api/packs \
+  -H "Content-Type: application/json" \
+  -d '{"packs": [23, 31, 53]}'
+```
+
+### POST /api/calculate
+
+Calculates optimal pack combination for an order.
+
+```bash
+curl -X POST localhost:8080/api/calculate \
+  -H "Content-Type: application/json" \
+  -d '{"order": 501}'
+```
+
+```json
+{"packs": [{"pack": 500, "quantity": 1}, {"pack": 250, "quantity": 1}]}
+```
+
 ## Testing
 
 Run all tests:
@@ -30,6 +75,46 @@ Run benchmark (750,000 items order with prime pack sizes [17, 29, 47], GCD=1):
 
 ```bash
 go test ./internal/service/ -bench=. -benchmem
+```
+
+## Project Structure
+
+```
+packify/
+├── cmd/                        # Application entry point
+│   └── main.go
+├── config/                     # Configuration files
+│   └── config.yaml
+├── internal/
+│   ├── app/                    # Application bootstrap and wiring
+│   │   └── app.go
+│   ├── config/                 # Config loading (cleanenv + YAML)
+│   │   └── config.go
+│   ├── handler/                # HTTP handlers and routing
+│   │   ├── calculate.go
+│   │   ├── get.go
+│   │   ├── helpers.go
+│   │   ├── router.go
+│   │   └── submit.go
+│   ├── httpserver/             # HTTP server with graceful shutdown
+│   │   └── server.go
+│   ├── logger/                 # slog setup with pretty handler
+│   │   ├── logger.go
+│   │   └── slogpretty.go
+│   ├── service/                # Business logic (DP algorithm)
+│   │   ├── calculate.go
+│   │   ├── calculate_test.go
+│   │   ├── get.go
+│   │   └── submit.go
+│   └── storage/sqlite/         # SQLite persistence
+│       └── sqlite.go
+├── web/                        # Embedded frontend (go:embed)
+│   ├── app.js
+│   ├── embed.go
+│   └── index.html
+├── Dockerfile
+├── docker-compose.yml
+└── Makefile
 ```
 
 ## Live Demo
