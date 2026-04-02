@@ -66,6 +66,20 @@ func TestCalculatePacks(t *testing.T) {
 			wantPacks: map[int]int{23: 2, 31: 7, 53: 9429},
 			wantTotal: 500000,
 		},
+		{
+			name:      "duplicate pack sizes are deduplicated",
+			order:     501,
+			packSizes: []int{250, 250, 500, 500, 1000},
+			wantPacks: map[int]int{500: 1, 250: 1},
+			wantTotal: 750,
+		},
+		{
+			name:      "overshipping when exact match impossible",
+			order:     7,
+			packSizes: []int{3, 5},
+			wantPacks: map[int]int{3: 1, 5: 1},
+			wantTotal: 8,
+		},
 	}
 
 	for _, tc := range tests {
@@ -93,4 +107,11 @@ func TestCalculatePacksErrors(t *testing.T) {
 
 	_, err = calculatePacks(100, []int{0, -5})
 	assert.Error(t, err, "expected error for no valid pack sizes")
+}
+
+func BenchmarkCalculatePacks(b *testing.B) {
+	packSizes := []int{17, 29, 47}
+	for b.Loop() {
+		calculatePacks(750000, packSizes)
+	}
 }
