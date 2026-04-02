@@ -3,6 +3,8 @@ package service
 import (
 	"testing"
 
+	"errors"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -107,6 +109,41 @@ func TestCalculatePacksErrors(t *testing.T) {
 
 	_, err = calculatePacks(100, []int{0, -5})
 	assert.Error(t, err, "expected error for no valid pack sizes")
+}
+
+func TestCalculateService_Calculate(t *testing.T) {
+	t.Run("zero order returns empty result", func(t *testing.T) {
+		svc := NewCalculateService(&mockPackStore{sizes: []int{250, 500}})
+		result, err := svc.Calculate(0)
+		require.NoError(t, err)
+		assert.Empty(t, result)
+	})
+
+	t.Run("negative order returns empty result", func(t *testing.T) {
+		svc := NewCalculateService(&mockPackStore{sizes: []int{250, 500}})
+		result, err := svc.Calculate(-5)
+		require.NoError(t, err)
+		assert.Empty(t, result)
+	})
+
+	t.Run("storage error is propagated", func(t *testing.T) {
+		svc := NewCalculateService(&mockPackStore{err: errors.New("db connection lost")})
+		_, err := svc.Calculate(100)
+		assert.ErrorContains(t, err, "db connection lost")
+	})
+
+	t.Run("empty pack sizes returns error", func(t *testing.T) {
+		svc := NewCalculateService(&mockPackStore{sizes: []int{}})
+		_, err := svc.Calculate(100)
+		assert.ErrorContains(t, err, "no pack sizes configured")
+	})
+
+	t.Run("normal calculation delegates to algorithm", func(t *testing.T) {
+		svc := NewCalculateService(&mockPackStore{sizes: []int{250, 500, 1000}})
+		result, err := svc.Calculate(501)
+		require.NoError(t, err)
+		assert.Equal(t, map[int]int{500: 1, 250: 1}, result)
+	})
 }
 
 func BenchmarkCalculatePacks(b *testing.B) {
