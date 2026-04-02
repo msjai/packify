@@ -113,7 +113,44 @@ submitPacksBtn.addEventListener("click", async () => {
 // Calculate packs for order.
 calculateForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  // TODO: implement when POST /api/calculate is ready.
+
+  const order = parseInt(document.getElementById("order-items").value, 10);
+  if (isNaN(order) || order <= 0) {
+    alert("Enter a valid order quantity");
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/calculate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      alert("Error: " + text);
+      return;
+    }
+
+    const data = await res.json();
+    clearChildren(resultsBody);
+
+    data.packs.forEach((entry) => {
+      const row = document.createElement("tr");
+      const packCell = document.createElement("td");
+      packCell.textContent = entry.pack;
+      const qtyCell = document.createElement("td");
+      qtyCell.textContent = entry.quantity;
+      row.appendChild(packCell);
+      row.appendChild(qtyCell);
+      resultsBody.appendChild(row);
+    });
+
+    resultsTable.style.display = "";
+  } catch (err) {
+    alert("Failed to calculate: " + err.message);
+  }
 });
 
 // Load pack sizes on page load.
