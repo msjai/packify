@@ -92,10 +92,14 @@ packify/
 │   │   └── config.go
 │   ├── handler/                # HTTP handlers and routing
 │   │   ├── calculate.go
+│   │   ├── calculate_test.go
 │   │   ├── get.go
+│   │   ├── get_test.go
 │   │   ├── helpers.go
+│   │   ├── mock_test.go
 │   │   ├── router.go
-│   │   └── submit.go
+│   │   ├── submit.go
+│   │   └── submit_test.go
 │   ├── httpserver/             # HTTP server with graceful shutdown
 │   │   └── server.go
 │   ├── logger/                 # slog setup with pretty handler
@@ -105,7 +109,10 @@ packify/
 │   │   ├── calculate.go
 │   │   ├── calculate_test.go
 │   │   ├── get.go
-│   │   └── submit.go
+│   │   ├── get_test.go
+│   │   ├── mock_test.go
+│   │   ├── submit.go
+│   │   └── submit_test.go
 │   └── storage/sqlite/         # SQLite persistence
 │       └── sqlite.go
 ├── web/                        # Embedded frontend (go:embed)
